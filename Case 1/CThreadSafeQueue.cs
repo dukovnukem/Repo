@@ -41,10 +41,15 @@ namespace ThreadSafeQueue
 
                 lock (_locker)
                 {
-                    if (_queue.Any())
-                        return _queue.Dequeue();
+                    if (!_queue.Any())                    
+                        _notEmptyEvent.Reset();                    
                     else
-                        _notEmptyEvent.Reset();
+                    {
+                        if (_queue.Count == 1)                        
+                            _notEmptyEvent.Reset();
+                        
+                        return _queue.Dequeue();
+                    }
                 }
             }
         }
