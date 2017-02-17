@@ -15,13 +15,13 @@ namespace ThreadSafeQueue
     {
         private readonly Object _locker;
         private readonly Queue<T> _queue;
-        private readonly ManualResetEvent _notEmptyEvent;
+        private readonly ManualResetEvent _hasElementsEvent;
 
         public CThreadSafeQueue()
         {
             _locker = new Object();
             _queue = new Queue<T>();
-            _notEmptyEvent = new ManualResetEvent(false);
+            _hasElementsEvent = new ManualResetEvent(false);
         }
 
         public void Push(T obj)
@@ -29,7 +29,7 @@ namespace ThreadSafeQueue
             lock (_locker)
             {
                 _queue.Enqueue(obj);
-                _notEmptyEvent.Set();
+                _hasElementsEvent.Set();
             }
         }
 
@@ -37,16 +37,16 @@ namespace ThreadSafeQueue
         {
             while (true)
             {
-                _notEmptyEvent.WaitOne();//this event can be deleted, it just helps not to run many cycles of while(true), reduces app. performance, but saves CPU time
+                _hasElementsEvent.WaitOne();//this event can be deleted, it just helps not to run many cycles of while(true), reduces app. performance, but saves CPU time
 
                 lock (_locker)
                 {
                     if (!_queue.Any())                    
-                        _notEmptyEvent.Reset();                    
+                        _hasElementsEvent.Reset();                    
                     else
                     {
                         if (_queue.Count == 1)                        
-                            _notEmptyEvent.Reset();
+                            _hasElementsEvent.Reset();
                         
                         return _queue.Dequeue();
                     }
