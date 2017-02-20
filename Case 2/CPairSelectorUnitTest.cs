@@ -34,5 +34,12 @@ namespace ChoosePairsUnitTest
 
             Assert.AreEqual<Int32>(pairs.Count(), 5);
         }
+
+        [TestMethod]        
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Select_CollectionIsNullException()
+        {
+            CPairSelector.Select(null, 0).Any();
+        }
     }
 }
