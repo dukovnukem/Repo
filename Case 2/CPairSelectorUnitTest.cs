@@ -17,12 +17,10 @@ namespace ChoosePairsUnitTest
             ICollection<Int32> testArray = new[] { 1, -3, 9, 10, 11, 12 };
             var pairs = CPairSelector.Select(testArray, X);
             
-            Assert.AreEqual<Int32>(pairs.Count(), 1);
-            
-            foreach (var pair in pairs)
-            {
-                Assert.IsTrue((pair.Item1 == -3 && pair.Item2 == 10) || (pair.Item1 == 10 && pair.Item2 == -3));
-            }
+            Assert.AreEqual<Int32>(1, pairs.Count());
+
+            var pair = pairs.ToArray()[0];
+            Assert.IsTrue((pair.Item1 == -3 && pair.Item2 == 10) || (pair.Item1 == 10 && pair.Item2 == -3));
         }
 
         [TestMethod]
